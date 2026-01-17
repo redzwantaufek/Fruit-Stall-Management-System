@@ -1,0 +1,16 @@
+Green Apple;10.5;50.5;Imported;15;10;2026
+Honey Mango;8;30;Local;1;11;2026
+Musang King Durian;45;10.5;Local;20;2;2026
+Cavendish Banana;4.5;100;Local;12;1;2026
+Black Grapes;18.5;20.2;Imported;5;11;2026
+Navel Orange;6.8;60.5;Imported;25;3;2026
+Red Flesh Papaya;3.5;15;Local;10;2;2026
+Seedless Watermelon;2.5;25.5;Local;18;1;2026
+Korean Strawberry;25;40;Imported;14;2;2026
+MD2 Pineapple;4;30;Local;30;1;2026
+Red DragonFruit;9.5;20.5;Local;22;3;2026
+Golden Kiwi;12;8.5;Imported;15;4;2026
+Yellow Lemon;5.5;15.2;Imported;5;5;2026
+Kampung Guava;3;35;Local;11;2;2026
+Fragrant Pear;8.8;45;Imported;9;3;2026
+Red Apple;3;1;local;25;1;2026
