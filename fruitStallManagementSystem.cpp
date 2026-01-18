@@ -6,7 +6,6 @@ Members:
 2. Muhammad Naufal bin Abdul Rahim ()
 3. Muhammad Izzat Azamuddin bin Azman ()
 */
-
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -36,14 +35,15 @@ const double MIN_WEIGHT_MEMBER = 3.0;
 
 //function prototypes
 void getData(Item [], int &, ifstream &);
-void saveData(Item inv[], int size, ofstream &outdata);
+void saveData(Item inv[], int size);  // Changed: no ofstream param
 void addFruit(Item [], int &);
 int searchFruit(Item [], int, string);
 void deleteFruit(Item [], int &);
 void displayInventory(Item [], int);
-void processSale(Item [], int , double [][STATS], ofstream &);
+void processSale(Item [], int , double [][STATS]);
 void restockItem(Item *fptr);
 void checkExpiry(Item [], int);
+void generateReports(double [][STATS]);
 
 int main()
 {
@@ -55,11 +55,8 @@ int main()
     //input file
     ifstream in;
     in.open("inventory.txt");
-    //output file
-    ofstream out1, out2;
-    out1.open("inventory.txt");
-
-    getData(inventory, fruitCount, in);//call funct get data
+    //call funct get data
+    getData(inventory, fruitCount, in);
     //main menu
     do {
         cout << "\n========================================="<<endl;
@@ -73,25 +70,24 @@ int main()
         cout << "6. Check Expiring Items" << endl;
         cout << "7. Management Reports" << endl;
         cout << "8. Exit" << endl;
-        cout << "Enter choice (No.): ";
+        cout << "Enter Menu (1-8): ";
         cin >> choice;
         cin.ignore(); 
 
         if (choice == 1)
             displayInventory(inventory, fruitCount);
-        else if (choice == 2)
-        {
+        else if (choice == 2){
             addFruit(inventory, fruitCount);
-            saveData(inventory, fruitCount, out1); // <--- CALL SAVE HERE MANUALLY
+            saveData(inventory, fruitCount);
             cout << ">> Auto-Save: File updated successfully.\n";
         }
         else if (choice == 3)
         {
             deleteFruit(inventory, fruitCount);
-            saveData(inventory, fruitCount, out1); // <--- CALL SAVE HERE MANUALLY
+            saveData(inventory, fruitCount);
         }
         else if (choice == 4)
-            processSale(inventory, fruitCount, monthlySales, out1);
+            processSale(inventory, fruitCount, monthlySales);
         else if (choice == 5)
         {
             string searchName;
@@ -108,7 +104,7 @@ int main()
             generateReports(monthlySales);
         else if (choice == 8)
         {
-            saveData(inventory, fruitCount, out1); 
+            saveData(inventory, fruitCount); 
             cout << "System Exiting... Data Saved.\n"; 
         }
         else
@@ -116,7 +112,6 @@ int main()
     } while (choice != 8);
 
     in.close();
-    out1.close();
 }
 
 //get data from file
@@ -126,10 +121,10 @@ void getData(Item inv[], int &size, ifstream &indata)
     if (!indata) return;//to check if file exists, if not it will return
     size = 0;//to make size = 0 everytime fuction is called
     // read file until eof
-    while (indata.eof()) {
+    while (!indata.eof()) 
+    {
         //to read name from file
         getline(indata, inv[size].name, ';');
-        indata.ignore(); // Skip the ;
         //to read price from file
         indata >> inv[size].price; 
         indata.ignore(); // Skip the ;
@@ -154,8 +149,9 @@ void getData(Item inv[], int &size, ifstream &indata)
 }
 
 //function to save data to file
-void saveData(Item inv[], int size, ofstream &outdata)
+void saveData(Item inv[], int size)
 {
+    ofstream outdata("inventory.txt");  // Open here
     for (int i = 0; i < size; i++) 
     {
         //write data to file with ; delimiter
@@ -167,13 +163,14 @@ void saveData(Item inv[], int size, ofstream &outdata)
         outdata << inv[i].expMonth << ";"; 
         outdata << inv[i].expYear << endl;
     }
-    outdata.close();
+    outdata.close();  // Close here
 }
 
 //function to add new fruit to file inventory
 void addFruit(Item inv[], int &size)
 {
-    if (size >= MAX_FRUITS) {
+    if (size >= MAX_FRUITS) 
+    {
         cout << "Error: Inv Full (Limit 500)!\n";
     }
     else
@@ -181,7 +178,7 @@ void addFruit(Item inv[], int &size)
         cout << "\n--- ADD NEW FRUIT ---\n";
         // Name 
         cout << "Name (e.g. Green Apple): "; 
-        getline(cin, inv[size].name,';'); // [FIX: getline for spaces]
+        getline(cin, inv[size].name);
         // Price
         cout << "Price per KG: "; 
         cin >> inv[size].price;
@@ -225,8 +222,10 @@ void deleteFruit(Item inv[], int &size)
 
     //search for fruit index
     int index = -1;
-    for (int i = 0; i < size; i++) {
-        if (inv[i].name == name) {
+    for (int i = 0; i < size; i++) 
+    {
+        if (inv[i].name == name) 
+        {
             index = i;
             break;  // Stop at first match
         }
@@ -238,13 +237,16 @@ void deleteFruit(Item inv[], int &size)
         cout << "Delete " << inv[index].name << "? (Y/N): ";
         cin >> confirm;
 
-        if (confirm == 'Y' || confirm == 'y') {
-            for (int i = index; i < size - 1; i++) {
+        if (confirm == 'Y' || confirm == 'y') 
+        {
+            for (int i = index; i < size - 1; i++) 
+            {
                 inv[i] = inv[i + 1];
             }
             size--; 
             cout << ">> Item Deleted.\n";
-        } else {
+        } else 
+        {
             cout << ">> Deletion Cancelled.\n";
         }
     } 
@@ -267,7 +269,7 @@ void displayInventory(Item inv[], int size)
 }
 
 //function point of sale
-void processSale(Item inv[], int size, double monthlySales[][STATS], ofstream &outdata) 
+void processSale(Item inv[], int size, double monthlyS[][STATS]) 
 {
     string name;
     double weightRequest;
@@ -282,8 +284,10 @@ void processSale(Item inv[], int size, double monthlySales[][STATS], ofstream &o
 
     //search for fruit index
     int index = -1;
-    for (int i = 0; i < size; i++) {
-        if (inv[i].name == name) {
+    for (int i = 0; i < size; i++) 
+    {
+        if (inv[i].name == name) 
+        {
             index = i;
             break;  // Stop at first match
         }
@@ -315,7 +319,8 @@ void processSale(Item inv[], int size, double monthlySales[][STATS], ofstream &o
 
             cout << "Member? (Y/N): "; cin >> isMember;
 
-            if ((isMember == 'Y' || isMember == 'y') && weightRequest >= MIN_WEIGHT_MEMBER) {
+            if ((isMember == 'Y' || isMember == 'y') && weightRequest >= MIN_WEIGHT_MEMBER)
+            {
                 *discountAmount = *grossTotal * MEMBER_DISCOUNT;
                 cout << ">> BULK MEMBER DISCOUNT APPLIED!"<<endl;
             }
@@ -325,22 +330,24 @@ void processSale(Item inv[], int size, double monthlySales[][STATS], ofstream &o
             
             inv[index].weight -= weightRequest;
             // Inline save data
-                for (int i = 0; i < size; i++) 
-                {
-                    outdata << inv[i].name << ";" ;
-                    outdata << inv[i].price << ";";
-                    outdata << inv[i].weight << ";"; 
-                    outdata << inv[i].type << ";";
-                    outdata << inv[i].expDay << ";"; 
-                    outdata << inv[i].expMonth << ";"; 
-                    outdata << inv[i].expYear << endl;
-                }
+            ofstream outdata("inventory.txt");
+            for (int i = 0; i < size; i++) 
+            {
+                outdata << inv[i].name << ";" ;
+                outdata << inv[i].price << ";";
+                outdata << inv[i].weight << ";"; 
+                outdata << inv[i].type << ";";
+                outdata << inv[i].expDay << ";"; 
+                outdata << inv[i].expMonth << ";"; 
+                outdata << inv[i].expYear << endl;
+            }
+            outdata.close();
 
             cout << "Day of Month (1-30): "; cin >> day;
             if (day >= 1 && day <= 30) 
             {
-                monthlySales[day-1][0] += *netTotal;
-                monthlySales[day-1][1] += profit;
+                monthlyS[day-1][0] += *netTotal;
+                monthlyS[day-1][1] += profit;
             }
 
             cout << "\n--------------------------------"<<endl;
@@ -379,14 +386,12 @@ void restockItem(Item *fptr)
 void checkExpiry(Item inv[], int size) 
 {
     int currMonth = 1, currYear = 2026;
-    cout << "\n--- EXPIRY ALERT (Jan 2026) ---\n";
+    cout << "\n--- EXPIRY ALERT (Jan 2026) ---"<<endl;
     bool found = false;
     for (int i = 0; i < size; i++) {
-        if (inv[i].expYear < currYear || 
-           (inv[i].expYear == currYear && inv[i].expMonth <= currMonth)) {
-            cout << "ALERT: " << inv[i].name << " expired on " 
-                 << inv[i].expDay << "/" << inv[i].expMonth << "/" 
-                 << inv[i].expYear << endl;
+        if (inv[i].expYear < currYear || (inv[i].expYear == currYear && inv[i].expMonth <= currMonth)) 
+        {
+            cout << "ALERT: " << inv[i].name << " expired on " << inv[i].expDay << "/" << inv[i].expMonth << "/" << inv[i].expYear << endl;
             found = true;
         }
     }
@@ -395,65 +400,98 @@ void checkExpiry(Item inv[], int size)
 }
 
 //function to generate reports
-void generateReports(double monthlySales[DAYS_IN_MONTH][STATS]) 
+void generateReports(double monthlyS[][STATS]) 
 {
-    int rptChoice;
+    int reportChoice;
     cout << "\n--- MANAGEMENT REPORT CENTER ---\n";
     cout << "1. Weekly Report (Specific Week)\n";
     cout << "2. Monthly Report (Full Overview)\n";
     cout << "Select Option: ";
-    cin >> rptChoice;
+    cin >> reportChoice;
 
-    if (rptChoice == 1) {
+    if (reportChoice == 1) 
+    {
         int week;
         cout << "Enter Week Number (1-4): ";
         cin >> week;
-        if (week >= 1 && week <= 4) {
+        if (week >= 1 && week <= 4) 
+        {
+            ofstream outWeekly;
+            outWeekly.open("Weekly Report.txt");
             // Inline printWeeklyReport
             int startDay = (week - 1) * 7;
             int endDay = startDay + 7;
             double total = 0, totalProfit = 0;
 
             cout << "\n--- WEEKLY REPORT (Week " << week << ") ---\n";
+            outWeekly << "\n--- WEEKLY REPORT (Week " << week << ") ---\n";
             cout << left << setw(10) << "Day" << setw(15) << "Sales(RM)" << setw(15) << "Profit(RM)" << endl;
+            outWeekly << left << setw(10) << "Day" << setw(15) << "Sales(RM)" << setw(15) << "Profit(RM)" << endl;
             cout << "----------------------------------------\n";
+            outWeekly << "----------------------------------------\n";
 
-            for (int i = startDay; i < endDay && i < DAYS_IN_MONTH; i++) {
-                if (monthlySales[i][0] > 0) { 
+            for (int i = startDay; i < endDay && i < DAYS_IN_MONTH; i++) 
+            {
+                if (monthlyS[i][0] > 0) { 
                     cout << "Day " << left << setw(6) << (i + 1) 
-                         << "RM " << setw(12) << monthlySales[i][0] 
-                         << "RM " << monthlySales[i][1] << endl;
-                    total += monthlySales[i][0];
-                    totalProfit += monthlySales[i][1];
+                         << "RM " << setw(12) << monthlyS[i][0] 
+                         << "RM " << monthlyS[i][1] << endl;
+                    outWeekly << "Day " << left << setw(6) << (i + 1) 
+                         << "RM " << setw(12) << monthlyS[i][0] 
+                         << "RM " << monthlyS[i][1] << endl;
+                    total += monthlyS[i][0];
+                    totalProfit += monthlyS[i][1];
                 }
             }
-            cout << "----------------------------------------\n";
+            cout << "----------------------------------------"<<endl;
+            outWeekly << "----------------------------------------"<<endl;
             cout << "WEEK TOTAL SALES : RM " << total << endl;
+            outWeekly << "WEEK TOTAL SALES : RM " << total << endl;
             cout << "WEEK NET PROFIT  : RM " << totalProfit << endl;
-        } else {
+            outWeekly << "WEEK NET PROFIT  : RM " << totalProfit << endl;
+            outWeekly.close();
+        } 
+        else 
+        {
             cout << "Invalid Week.\n";
         }
-    } else if (rptChoice == 2) {
+    } 
+    else if (reportChoice == 2) 
+    {
+        ofstream outMonthly;
+        outMonthly.open("Monthly Report.txt");
         // Inline printMonthlyReport
         double total = 0, maxSales = -1;
         int highestDay = 0;
 
-        cout << "\n--- MONTHLY PERFORMANCE REPORT ---\n";
+        cout << "\n--- MONTHLY PERFORMANCE REPORT ---"<<endl;
+        outMonthly << "\n--- MONTHLY PERFORMANCE REPORT ---"<<endl;
         cout << left << setw(10) << "Day" << setw(15) << "Sales(RM)" << endl;
+        outMonthly << left << setw(10) << "Day" << setw(15) << "Sales(RM)" << endl;
         
-        for (int i = 0; i < DAYS_IN_MONTH; i++) {
-            if (monthlySales[i][0] > 0) {
+        for (int i = 0; i < DAYS_IN_MONTH; i++) 
+        {
+            if (monthlyS[i][0] > 0) 
+            {
                 cout << "Day " << left << setw(6) << (i + 1) 
-                     << "RM " << monthlySales[i][0] << endl;
-                total += monthlySales[i][0];
-                if (monthlySales[i][0] > maxSales) { maxSales = monthlySales[i][0]; highestDay = i + 1; }
+                     << "RM " << monthlyS[i][0] << endl;
+                outMonthly << "Day " << left << setw(6) << (i + 1) 
+                     << "RM " << monthlyS[i][0] << endl;
+                total += monthlyS[i][0];
+                if (monthlyS[i][0] > maxSales) { maxSales = monthlyS[i][0]; highestDay = i + 1; }
             }
         }
         
-        cout << "----------------------------------\n";
+        cout << "----------------------------------"<<endl;
+        outMonthly << "----------------------------------"<<endl;
         cout << "TOTAL MONTH REVENUE : RM " << total << endl;
-        cout << "BEST PERFORMING DAY : Day " << highestDay << " (RM " << maxSales << ")\n";
-    } else {
+        outMonthly << "TOTAL MONTH REVENUE : RM " << total << endl;
+        cout << "BEST PERFORMING DAY : Day " << highestDay << " (RM " << maxSales << ")"<<endl;
+        outMonthly << "BEST PERFORMING DAY : Day " << highestDay << " (RM " << maxSales << ")"<<endl;
+        outMonthly.close();
+    } 
+    else 
+    {
         cout << "Invalid Selection.\n";
     }
 }
