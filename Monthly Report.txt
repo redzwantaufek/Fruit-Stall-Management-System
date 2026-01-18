@@ -1,0 +1,7 @@
+
+--- MONTHLY PERFORMANCE REPORT ---
+Day       Sales(RM)      
+Day 18    RM 10
+----------------------------------
+TOTAL MONTH REVENUE : RM 10
+BEST PERFORMING DAY : Day 18 (RM 10)
