@@ -55,7 +55,7 @@ int main()
 
     //input file
     ifstream in;
-    in.open("inventory.txt");
+    in.open("Inventory.txt");
     //call funct get data
     getData(inventory, fruitCount, in);
     //main menu
@@ -68,11 +68,9 @@ int main()
         cout << "3. Delete Fruit" << endl;
         cout << "4. Edit Fruit Details" << endl;
         cout << "5. Point of Sale System (POS System)" << endl;
-        cout << "6. Restock Item" << endl;
-        cout << "7. Check Expiring Items" << endl;
-        cout << "8. Management Reports" << endl;
-        cout << "9. Exit" << endl;
-        cout << "Enter Menu (1-9): ";
+        cout << "6. Management Reports" << endl;
+        cout << "7. Exit" << endl;
+        cout << "Enter Menu (1-7): ";
         cin >> choice;
         cin.ignore(); 
   
@@ -125,8 +123,7 @@ void getData(Item inv[], int &size, ifstream &indata)
             indata >> inv[size].weight; 
             indata.ignore();
             // to read type from file
-            getline(indata, inv[size].type, ';');
-            indata.ignore(); // Skip newline at end of row
+            getline(indata, inv[size].type);
             
             size++;
         }
@@ -135,13 +132,13 @@ void getData(Item inv[], int &size, ifstream &indata)
 //function to save data to file
 void saveData(Item inv[], int size)
 {
-    ofstream outdata("inventory.txt");//outpu file stream 
+    ofstream outdata("Inventory.txt");//outpu file stream 
     for (int i = 0; i < size; i++) {
         //write data to file with ; delimiter
         outdata << inv[i].name << ";" ;
         outdata << fixed << setprecision(2) << inv[i].price << ";";
         outdata << inv[i].weight << ";"; 
-        outdata << inv[i].type << ";";
+        outdata << inv[i].type << endl;
     }
     outdata.close(); 
 }
@@ -229,7 +226,7 @@ void deleteFruit(Item inv[], int &size)
 void displayInventory(Item inv[], int size) 
 {
     cout << "\n------------------------- INVENTORY LIST -------------------------"<<endl;
-    cout << left << setw(20) << "Name" << setw(10) << "Price/KG" << setw(10) << "Stock(KG)" << setw(10) << "Type" << setw(12) << "Expiry" << endl;
+    cout << left << setw(20) << "Name" << setw(10) << "Price/KG" << setw(10) << "Stock(KG)" << setw(10) << "Type" << endl;
     cout << "------------------------------------------------------------------"<<endl;
     for (int i = 0; i < size; i++) 
     {
@@ -527,7 +524,7 @@ void editFruit(Item inv[], int size)
             cin >> inv[index].weight;
             cout << ">> Weight updated successfully.\n";
         } else if (editChoice == 3) {
-            cout << "Enter New Type: ";
+            cout << "Enter New Type (Local/Imported): ";
             getline(cin, inv[index].type);
             cout << ">> Type updated successfully.\n";
         } else if (editChoice == 4) {
@@ -538,7 +535,7 @@ void editFruit(Item inv[], int size)
             return;
         }
         //save the file
-        ofstream outdata("inventory.txt");
+        ofstream outdata("Inventory.txt");
         for (int i = 0; i < size; i++) {
             outdata << inv[i].name << ";" ;
             outdata << fixed << setprecision(2) << inv[i].price << ";";
