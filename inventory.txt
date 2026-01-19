@@ -1,4 +1,4 @@
-Green Apple;0.50;50.00;Imported;15;10;2026
+Green Apple;0.50;60.00;Imported;15;10;2026
 Honey Mango;0.00;18.00;Local;1;11;2026
 Musang King Durian;5.00;5.50;Local;20;2;2026
 Cavendish Banana;0.50;100.00;Local;12;1;2026
@@ -11,5 +11,5 @@ MD2 Pineapple;0.00;30.00;Local;30;1;2026
 Red DragonFruit;0.50;20.50;Local;22;3;2026
 Golden Kiwi;2.00;8.50;Imported;15;4;2026
 Yellow Lemon;0.50;15.20;Imported;5;5;2026
-Kampung Guava;2.30;28.00;Local;11;2;2026
+Kampung Guava;2.30;27.00;Local;11;2;2026
 Fragrant Pear;0.80;45.00;Imported;9;3;2026
