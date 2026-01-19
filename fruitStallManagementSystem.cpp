@@ -17,11 +17,7 @@ struct Item {
     string name;   
     double price;  
     double weight; 
-    string type;      
-    // Expiry Date
-    int expDay;
-    int expMonth;
-    int expYear;
+    string type;
 };
 //struct for cart item
 struct Cart {
@@ -47,8 +43,6 @@ int searchFruit(Item [], int, string);
 void deleteFruit(Item [], int &);
 void displayInventory(Item [], int);
 void processSale(Item [], int , double [][TOTAL]);
-void restockItem(Item [], int);
-void checkExpiry(Item [], int);
 void generateReports(double [][TOTAL]);
 void editFruit(Item [], int);
 
@@ -100,22 +94,10 @@ int main()
         }
         else if (choice == 5)//point of sale system
             processSale(inventory, fruitCount, monthlySales);
-        else if (choice == 6)//restock item
-        {
-            string searchName;
-            cout << "Enter fruit name to restock: ";
-            getline(cin, searchName);
-            int index = searchFruit(inventory, fruitCount, searchName);
-            if (index != -1)
-                restockItem(inventory, index); 
-            else cout << "Error: Fruit not found!\n";
-        }
-        else if (choice == 7)//check expiry
-            checkExpiry(inventory, fruitCount);
-        else if (choice == 8)//generate reports
+        else if (choice == 6)//generate reports
             generateReports(monthlySales);
         
-        else if (choice == 9) //exit program
+        else if (choice == 7) //exit program
         {
             saveData(inventory, fruitCount); 
             cout << "System Exiting... Data Saved.\n"; 
@@ -123,7 +105,7 @@ int main()
         else//invalid input
             cout << "Invalid input. Please enter number between 1-9.!!!!!"<<endl;
             
-    } while (choice != 9);
+    } while (choice != 7);
 
     in.close();
 }
@@ -144,14 +126,6 @@ void getData(Item inv[], int &size, ifstream &indata)
             indata.ignore();
             // to read type from file
             getline(indata, inv[size].type, ';');
-            //to read expiry day from file
-            indata >> inv[size].expDay; 
-            indata.ignore();
-            //to read expiry month from file
-            indata >> inv[size].expMonth; 
-            indata.ignore();
-            // to read expiry year from file
-            indata >> inv[size].expYear; 
             indata.ignore(); // Skip newline at end of row
             
             size++;
@@ -168,9 +142,6 @@ void saveData(Item inv[], int size)
         outdata << fixed << setprecision(2) << inv[i].price << ";";
         outdata << inv[i].weight << ";"; 
         outdata << inv[i].type << ";";
-        outdata << inv[i].expDay << ";"; 
-        outdata << inv[i].expMonth << ";"; 
-        outdata << inv[i].expYear << endl;
     }
     outdata.close(); 
 }
@@ -198,14 +169,6 @@ void addFruit(Item inv[], int &size)
         // Type
         cout << "Type (Local/Imported): "; 
         cin >> inv[size].type;
-        // Expiry Date
-        cout << "Expiry Day: ";
-        cin >> inv[size].expDay;
-        cout << "Expiry Month: ";
-        cin >> inv[size].expMonth;
-        cout << "Expiry Year: ";
-        cin >> inv[size].expYear;
-        
         size++; 
         cout << ">> Success: Fruit Added & Saved!\n";
     }
@@ -270,7 +233,7 @@ void displayInventory(Item inv[], int size)
     cout << "------------------------------------------------------------------"<<endl;
     for (int i = 0; i < size; i++) 
     {
-        cout << left << setw(20) << inv[i].name << "RM" << fixed << setprecision(2) << setw(8) << inv[i].price << setw(10) << inv[i].weight << setw(10) << inv[i].type << inv[i].expDay << "/" << inv[i].expMonth << "/" << inv[i].expYear << endl;
+        cout << left << setw(20) << inv[i].name << "RM" << fixed << setprecision(2) << setw(8) << inv[i].price << setw(10) << inv[i].weight << setw(10) << inv[i].type << endl;
     }
 }
 
@@ -443,101 +406,6 @@ void processSale(Item inv[], int size, double monthlyS[][TOTAL])
     delete netTotal;
 }
 
-//function to restock item NAK DELETE
-void restockItem(Item inv[], int index)
-{
-    double quantity;
-    //access data and get the restock quantity
-    cout << "\n--- RESTOCK ITEM ---" << endl;
-    cout << "Item Name: " << inv[index].name << endl;
-    cout << "Current Stock: " << inv[index].weight << " KG" << endl;
-    cout << "Enter Quantity to Add (KG): ";
-    cin >> quantity;
-    // Validate input
-    if (quantity > 0) {
-        inv[index].weight += quantity;
-        cout << ">> Success: Stock updated." << endl;
-        cout<<">> New Total: " << inv[index].weight << " KG\n";
-    } else {
-        cout << ">> Error: Invalid quantity.\n";
-    }
-}
-
-// Check expiry dates based on user input NAK DELETE
-void checkExpiry(Item inv[], int size) 
-{
-    int currDay, currMonth, currYear;
-
-    cout << "\n========================================" << endl;
-    cout << "          CHECK EXPIRY STATUS           " << endl;
-    cout << "========================================" << endl;
-    
-    // 1. Get Today's Date
-    cout << "Enter Today's Date (Day Month Year): "; 
-    cin >> currDay >> currMonth >> currYear;
-
-    cout << "\n--- Status Report (As of " << currDay << "/" << currMonth << "/" << currYear << ") ---\n" << endl;
-    cout << left << setw(20) << "Item Name" << setw(20) << "Status" << setw(15) << "Expiry Date" << endl;
-    cout << "-------------------------------------------------------" << endl;
-
-    bool found = false;
-
-    for (int i = 0; i < size; i++) {
-        string status = "";
-        
-        // 1. Check EXPIRED (Past Date)
-        if (inv[i].expYear < currYear || 
-           (inv[i].expYear == currYear && inv[i].expMonth < currMonth) ||
-           (inv[i].expYear == currYear && inv[i].expMonth == currMonth && inv[i].expDay < currDay)) 
-        {
-            status = "EXPIRED!";
-        }
-        // 2. Check TODAY
-        else if (inv[i].expYear == currYear && inv[i].expMonth == currMonth && inv[i].expDay == currDay) 
-        {
-            status = "Expires TODAY";
-        }
-        // 3. Check EXPIRING SOON (Next 10 Days)
-        else 
-        {
-            // Calculate the difference in days (Simplified logic)
-            // This logic works well for same-month and next-month transitions
-            int daysRemaining = 999; // Default high value
-
-            if (inv[i].expYear == currYear) {
-                if (inv[i].expMonth == currMonth) {
-                    // Same month: just subtract days
-                    daysRemaining = inv[i].expDay - currDay;
-                }
-                else if (inv[i].expMonth == currMonth + 1) {
-                    // Next month: Add days remaining in current month + days in next month
-                    // Assume 30 days per month for simplicity in this student project
-                    int daysLeftInCurrMonth = 30 - currDay;
-                    daysRemaining = daysLeftInCurrMonth + inv[i].expDay;
-                }
-            }
-            
-            // If the difference is between 1 and 10 days
-            if (daysRemaining > 0 && daysRemaining <= 10) {
-                status = "Expiring Soon";
-            }
-        }
-
-        // Only print if we found a status (Expired, Today, or Soon)
-        if (status != "") {
-            cout << left << setw(20) << inv[i].name 
-                 << setw(20) << status 
-                 << inv[i].expDay << "/" << inv[i].expMonth << "/" << inv[i].expYear << endl;
-            found = true;
-        }
-    }
-
-    if (!found) {
-        cout << "No items are expired or expiring soon." << endl;
-    }
-    cout << "-------------------------------------------------------" << endl;
-}
-
 // Function to write report
 void generateReports(double monthlyS[][TOTAL]) 
 {
@@ -643,11 +511,10 @@ void editFruit(Item inv[], int size)
         cout << "1. Price  : RM " << inv[index].price << endl;
         cout << "2. Weight : " << inv[index].weight << " KG" << endl;
         cout << "3. Type   : " << inv[index].type << endl;
-        cout << "4. Expiry : " << inv[index].expDay << "/" << inv[index].expMonth << "/" << inv[index].expYear << endl;
-        cout << "5. Cancel Edit" << endl;
-        
+        cout << "4. Cancel Edit" << endl;
+
         int editChoice;
-        cout << "\nSelect field to edit (1-5): ";
+        cout << "\nSelect field to edit (1-4): ";
         cin >> editChoice;
         cin.ignore();
 
@@ -664,18 +531,12 @@ void editFruit(Item inv[], int size)
             getline(cin, inv[index].type);
             cout << ">> Type updated successfully.\n";
         } else if (editChoice == 4) {
-            cout << "Enter New Expiry Day: "; cin >> inv[index].expDay;
-            cout << "Enter New Expiry Month: "; cin >> inv[index].expMonth;
-            cout << "Enter New Expiry Year: "; cin >> inv[index].expYear;
-            cout << ">> Expiry date updated successfully.\n";
-        } else if (editChoice == 5) {
             cout << ">> Edit Cancelled.\n";
             return;
         } else {
             cout << ">> Invalid choice.\n";
             return;
         }
-
         //save the file
         ofstream outdata("inventory.txt");
         for (int i = 0; i < size; i++) {
@@ -683,9 +544,6 @@ void editFruit(Item inv[], int size)
             outdata << fixed << setprecision(2) << inv[i].price << ";";
             outdata << inv[i].weight << ";"; 
             outdata << inv[i].type << ";";
-            outdata << inv[i].expDay << ";"; 
-            outdata << inv[i].expMonth << ";"; 
-            outdata << inv[i].expYear << endl;
         }
         outdata.close(); 
         cout << ">> File updated.\n";
