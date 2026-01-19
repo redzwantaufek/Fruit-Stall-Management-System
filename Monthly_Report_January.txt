@@ -1,13 +1,12 @@
 --- PERFORMANCE REPORT: January ---
-Day       Sales(RM)      Profit(RM)     
+Day       Sales(RM)      Weight(KG)     
 ----------------------------------------
-Day 18    RM 15.295      RM 6.118
-Day 20    RM 34          RM 13.6
+Day 20    RM 52.25       22        
+Day 21    RM 0.5         1         
+Day 25    RM 18          4         
 ----------------------------------------
-TOTAL SALES      : RM 49.30
-TOTAL PROFIT     : RM 19.72
-AVERAGE SALES    : RM 24.65 (per active day)
-HIGHEST SALE     : RM 34.00 (Day 20)
-LOWEST SALE      : RM 15.30 (Day 18)
-
-[NOTE]: Detailed list of specific items sold is available in 'Transaction_Log.txt'
+TOTAL SALES      : RM 70.75
+TOTAL WEIGHT     : 27.00 KG
+AVERAGE SALES    : RM 23.58 (per active day)
+HIGHEST SALE     : RM 52.25 (Day 20)
+LOWEST SALE      : RM 0.50 (Day 21)
