@@ -1,6 +1,0 @@
---- WEEKLY REPORT (Week 1) ---
-Day       Sales(RM)      Profit(RM)     
-----------------------------------------
-----------------------------------------
-WEEK TOTAL SALES : RM 0
-WEEK NET PROFIT  : RM 0
