@@ -74,10 +74,12 @@ int main()
         else if (choice == 3) {//delete fruit
             deleteFruit(inventory, fruitCount);
             saveData(inventory, fruitCount);
+            cout << ">>File updated successfully." << endl;
         }
         else if (choice == 4) { //edit fruit details
             editFruit(inventory, fruitCount);
             saveData(inventory, fruitCount);
+            cout << ">>File updated successfully." << endl;
         }
         else if (choice == 5) { //check out system
             processSale(inventory, fruitCount, monthlySales);
@@ -202,7 +204,7 @@ void displayInventory(Item inv[], int fCount)
     }
 }
 
-// Function point of sale
+// Function checkout system
 void processSale(Item inv[], int fCount, double monthlyS[][2]) 
 {
     Cart cart[50]; // Array to hold up to 50 items
@@ -380,6 +382,7 @@ void generateReports(double monthlyS[][2])
     double totalWeight = 0;
     double maxSale = 0; 
     double minSale = monthlyS[0][0];//bacause we want to compare for lowest number
+    bool firstSaleFound = false;
     int countActiveDays = 0;// to count days with sales
     int bestDay = 0, worstDay = 0;
     //show output
@@ -407,7 +410,14 @@ void generateReports(double monthlyS[][2])
                 bestDay = i + 1;
             }
             //find min
-            if (monthlyS[i][0] < minSale) {
+            //if first sale found
+            if (firstSaleFound == false) {
+                minSale = monthlyS[i][0];
+                worstDay = i + 1;
+                firstSaleFound = true;
+            }
+            //if not first sale
+            else if (monthlyS[i][0] < minSale) {
                 minSale = monthlyS[i][0];
                 worstDay = i + 1;
             }
@@ -455,7 +465,7 @@ void editFruit(Item inv[], int fCount)
             index = i;
             check = true;
     }
-    if (check == false){
+    if (check == true){
         //menu to edit
         cout << "\n--- Current Details for " << inv[index].name << " ---" << endl;
         cout << "1. Price  : RM " << inv[index].price << endl;
@@ -487,17 +497,6 @@ void editFruit(Item inv[], int fCount)
             cout << ">> Invalid choice." << endl;
             return;
         }
-        //write to file
-        ofstream outdata;
-        outdata.open("Inventory.txt");
-        for (int i = 0; i < fCount; i++) {
-            outdata << inv[i].name << ";" ;
-            outdata << fixed << setprecision(2) << inv[i].price << ";";
-            outdata << inv[i].weight << ";"; 
-            outdata << inv[i].type << ";";
-        }
-        outdata.close(); 
-        cout << ">> File updated." << endl;
     }
     else {
         cout << ">>Fruit not found in inventory." << endl;
