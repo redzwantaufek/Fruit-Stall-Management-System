@@ -12,14 +12,13 @@ Members:
 
 using namespace std;
 
-//declare struct for fruit item
+//declare struct
 struct Item {
     string name;   
     double price;  
     double weight; 
     string type;
 };
-//struct for cart item
 struct Cart {
     int index;
     string name;
@@ -28,28 +27,20 @@ struct Cart {
     double subtotal;
 };
 
-//declare constant variables
-const int MAX_FRUITS = 100;//max fruit in inventory
-const int DAYS_IN_MONTH = 31;//days in month
-const int TOTAL = 2; //0 total sales, 1 total items sold for 2d array
-const double MEMBER_DISCOUNT = 0.05;//5% member discount
-const double MIN_WEIGHT_MEMBER = 3.0;//min weight for member discount
-
 //function prototypes
 void getData(Item [], int &, ifstream &);
 void saveData(Item inv[], int);
 void addFruit(Item [], int &);
-int searchFruit(Item [], int, string);
 void deleteFruit(Item [], int &);
 void displayInventory(Item [], int);
-void processSale(Item [], int , double [][TOTAL]);
-void generateReports(double [][TOTAL]);
+void processSale(Item [], int , double [][2]);
+void generateReports(double [][2]);
 void editFruit(Item [], int);
 
 int main()
 {
-    Item inventory[MAX_FRUITS];// declare struct array, with max 100 fruits array
-    double monthlySales[DAYS_IN_MONTH][TOTAL] = {0};//declare 2D array to store monthly sales
+    Item inventory[100];// declare struct array, with max 100 fruits array
+    double monthlySales[31][2] = {0};//declare 2D array to store monthly sales
     int fruitCount = 0;//to store number of fruits
     int choice;// to store user choice
 
@@ -78,7 +69,7 @@ int main()
             displayInventory(inventory, fruitCount);
         else if (choice == 2){ //add new fruit
             addFruit(inventory, fruitCount);
-            cout << ">>File updated successfully.\n";
+            cout << ">>File updated successfully." << endl;
         }
         else if (choice == 3)//delete fruit
         {
@@ -97,7 +88,7 @@ int main()
         else if (choice == 7) //exit program
         {
             saveData(inventory, fruitCount); 
-            cout << "Exit System\n"; 
+            cout << "Exit System" << endl;
         }
         else//invalid input
             cout << "Invalid input. Please enter number between 1-7.!!!!!"<<endl;
@@ -108,137 +99,120 @@ int main()
 }
 
 //get data from file
-void getData(Item inv[], int &size, ifstream &indata)
+void getData(Item inv[], int &fCount, ifstream &indata)
 {
 
-        size = 0; //to make size 0 everytime function is called
-        
+        fCount = 0; //to make size 0 everytime function is called
         // read file
-        while (getline(indata, inv[size].name, ';')) { //read name first, kalau takde nama break the loop, kalau buat eof ada blank space
-            indata >> inv[size].price; 
+        while (!indata.eof()) { //read name first, kalau takde nama break the loop, kalau buat eof ada blank space
+            getline(indata, inv[fCount].name, ';');
+            indata >> inv[fCount].price; 
             indata.ignore();
-            indata >> inv[size].weight; 
+            indata >> inv[fCount].weight; 
             indata.ignore();
-            getline(indata, inv[size].type);
+            getline(indata, inv[fCount].type);
             
-            size++;
+            fCount++;
         }
 }
 
 //function to save data to file
-void saveData(Item inv[], int size)
+void saveData(Item inv[], int fCount)
 {
     ofstream outdata;
-    outdata.open("Inventory.txt");
-    for (int i = 0; i < size; i++) {
-        //write data to file with ; delimiter
+    outdata.open("Inventory.txt"); 
+    for (int i = 0; i < fCount; i++) {
         outdata << inv[i].name << ";" ;
         outdata << fixed << setprecision(2) << inv[i].price << ";";
         outdata << inv[i].weight << ";"; 
         outdata << inv[i].type << endl;
     }
-    outdata.close(); 
+    outdata.close();
 }
 
 //function to add new fruit to file inventory
-void addFruit(Item inv[], int &size)
+void addFruit(Item inv[], int &fCount)
 {
     //check if inventory full
-    if (size >= MAX_FRUITS) 
+    if (fCount > 99)
     {
-        cout << "Error: Inv Full (Limit 100)!\n";
-    }
-    else
-    {
-        cout << "\n---------- ADD NEW FRUIT ----------\n";
+        cout << "Error: Inv Full (Limit 100)!" << endl;
+    } else {
+        cout << "\n---------- ADD NEW FRUIT ----------" << endl;
         // Name
         cout << "Name (Exp: Green Apple): "; 
-        getline(cin, inv[size].name);
+        getline(cin, inv[fCount].name);
         // Price
         cout << "Price per KG: "; 
-        cin >> inv[size].price;
+        cin >> inv[fCount].price;
         // Weight
         cout << "Weight (KG): "; 
-        cin >> inv[size].weight;
+        cin >> inv[fCount].weight;
         // Type
         cout << "Type (Local/Imported): "; 
-        cin >> inv[size].type;
-        size++; 
-        cout << ">> Success: Fruit Added & Saved!\n";
+        cin >> inv[fCount].type; 
+        cout << ">> Fruit Added!!!" << endl;
+        fCount++;
     }
 }
 
-//function to search fruit by name
-int searchFruit(Item inv[], int size, string searchName)
-{
-    int index = -1;//give index value -1 if not found
-    for (int i = 0; i < size; i++) {
-        if (inv[i].name == searchName) 
-            index = i;
-    }
-    return index;
-}
 
 //function to delete fruit from inventory
-void deleteFruit(Item inv[], int &size) 
+void deleteFruit(Item inv[], int &fCount) 
 {
     string name;
-    cout << "\n------------- DELETE FRUIT -------------\n";
+    cout << "\n------------- DELETE FRUIT -------------" << endl;
     cout << "Enter Fruit Name: "; 
     getline(cin, name);
 
     //search for fruit index
-    int index = -1;
-    for (int i = 0; i < size; i++) {
-        if(index == -1){ // Only search if not found yet
-            if (inv[i].name == name) {
-                index = i;
-            }
+    bool check = false;
+    int index = 0;
+    for (int i = 0; i < fCount; i++) {
+        if (inv[i].name == name) {
+            index = i;
+            check = true;
         }
-    }
-    //if found, confirm deletion
-    if (index != -1){
+}
+    //delete
+    if (check == true){
         char confirm;
         cout << "Delete " << inv[index].name << "? (Y/N): ";
         cin >> confirm;
 
         if (confirm == 'Y' || confirm == 'y') {
-            for (int i = index; i < size - 1; i++) {
+            for (int i = index; i < fCount - 1; i++) {
                 inv[i] = inv[i + 1];
             }
-            size--; 
-            cout << ">> Item Deleted.\n";
-        } else 
-        {
-            cout << ">> Deletion Cancelled.\n";
+            fCount--; 
+            cout << ">> Item Deleted." << endl;
+        } else {
+            cout << ">> Deletion Cancelled." << endl;
         }
-    } 
-    else 
-    {
-        cout << "Fruit Not found.\n"; 
+    } else {
+        cout << "Fruit Not found." << endl; 
     }
 }
 
 //function to display the inventory
-void displayInventory(Item inv[], int size) 
+void displayInventory(Item inv[], int fCount) 
 {
     cout << "\n------------------------- INVENTORY LIST -------------------------"<<endl;
     cout << left << setw(20) << "Name" << setw(10) << "Price/KG" << setw(10) << "Stock(KG)" << setw(10) << "Type" << endl;
     cout << "------------------------------------------------------------------"<<endl;
-    for (int i = 0; i < size; i++) 
-    {
+    for (int i = 0; i < fCount; i++) {
         cout << left << setw(20) << inv[i].name << "RM" << fixed << setprecision(2) << setw(8) << inv[i].price << setw(10) << inv[i].weight << setw(10) << inv[i].type << endl;
     }
 }
 
 // Function point of sale
-void processSale(Item inv[], int size, double monthlyS[][TOTAL]) 
+void processSale(Item inv[], int fCount, double monthlyS[][2]) 
 {
     Cart cart[50]; // Array to hold up to 50 items
     int cartCount = 0;// Number of items in cart
     char addMore = 'Y';//add ore items to cart or not
     char isMember;//member status
-    double totalWeight = 0; // To check for discount
+    double totalWeight = 0;
     // Pointer variables for calculation
     double *grossTotal = new double;// Pointer for gross total
     double *discountAmount = new double;// Pointer for discount amount
@@ -260,13 +234,10 @@ void processSale(Item inv[], int size, double monthlyS[][TOTAL])
 
         //search for fruit index
         int index = -1;
-        for (int i = 0; i < size; i++) {
-            if(index == -1){ // Only search if not found yet
-
+        for (int i = 0; i < fCount; i++) {
                 if (inv[i].name == name) {
                     index = i;
                 }
-            }
         }
 
         if (index == -1) { 
@@ -316,8 +287,8 @@ void processSale(Item inv[], int size, double monthlyS[][TOTAL])
         cin >> isMember;
 
         //check discount eligibility
-        if ((isMember == 'Y' || isMember == 'y') && totalWeight >= MIN_WEIGHT_MEMBER) {
-            *discountAmount = *grossTotal * MEMBER_DISCOUNT;
+        if ((isMember == 'Y' || isMember == 'y') && totalWeight >= 3.0) {
+            *discountAmount = *grossTotal * 0.05;
             cout << ">>MEMBER DISCOUNT APPLIED (5%)!" << endl;
         }
 
@@ -332,19 +303,19 @@ void processSale(Item inv[], int size, double monthlyS[][TOTAL])
             cin >> day >> month >> year;
             if ((month >= 1 && month <= 12) && (day >= 1 && day <= 31)) {
                 validDate = true;
-                if (day <= DAYS_IN_MONTH) {
+                if (day <= 31) {
                     monthlyS[day-1][0] += *netTotal;//total sales
                     monthlyS[day-1][1] += totalWeight;//total weight sold
                 }
             } else {
-                cout << "Invalid Date. Try again.\n";
+                cout << "Invalid Date. Try again." << endl;
             }
         }
 
         //step 3 print receipt
-        saveData(inv, size); // Save the stock deductions
-        ofstream outReceipt; // Receipt file
-        outReceipt.open("Receipt.txt");
+        saveData(inv, fCount); // Save the stock deductions
+        ofstream outData; // Receipt file
+        outData.open("Receipt.txt");
 
         //display receipt on screen
         cout << "\n==========================================" << endl;
@@ -354,12 +325,12 @@ void processSale(Item inv[], int size, double monthlyS[][TOTAL])
         cout << "------------------------------------------" << endl;
         cout << left << setw(20) << "Item" << setw(10) << "Qty(KG)" << setw(10) << "Price" << endl;
         //write receipt to file
-        outReceipt << "==========================================" << endl;
-        outReceipt << "              SALES RECEIPT               " << endl;
-        outReceipt << "==========================================" << endl;
-        outReceipt << "Date: " << day << "/" << month << "/" << year << endl;
-        outReceipt << "------------------------------------------" << endl;
-        outReceipt << left << setw(20) << "Item" << setw(10) << "Qty(KG)" << setw(10) << "Price" << endl;
+        outData << "==========================================" << endl;
+        outData << "              SALES RECEIPT               " << endl;
+        outData << "==========================================" << endl;
+        outData << "Date: " << day << "/" << month << "/" << year << endl;
+        outData << "------------------------------------------" << endl;
+        outData << left << setw(20) << "Item" << setw(10) << "Qty(KG)" << setw(10) << "Price" << endl;
 
         //display cart items
         for (int i = 0; i < cartCount; i++) {
@@ -367,31 +338,31 @@ void processSale(Item inv[], int size, double monthlyS[][TOTAL])
             cout << left << setw(20) << cart[i].name << setw(10) << cart[i].weight << "RM " << fixed << setprecision(2) << cart[i].subtotal << endl;
             
             //file
-            outReceipt << left << setw(20) << cart[i].name << setw(10) << cart[i].weight << "RM " << fixed << setprecision(2) << cart[i].subtotal << endl;
+            outData << left << setw(20) << cart[i].name << setw(10) << cart[i].weight << "RM " << fixed << setprecision(2) << cart[i].subtotal << endl;
 
         }
-        //display on screen
+        //display ouput
         cout << "------------------------------------------" << endl;
+        outData << "------------------------------------------" << endl;
         cout << left << setw(20) << "GROSS TOTAL:" << "RM " << *grossTotal << endl;
+        outData << left << setw(20) << "GROSS TOTAL:" << "RM " << *grossTotal << endl;
         cout << left << setw(20) << "DISCOUNT:" << "-RM " << *discountAmount << endl;
+        outData << left << setw(20) << "DISCOUNT:" << "-RM " << *discountAmount << endl;
         cout << "------------------------------------------" << endl;
+        outData << "------------------------------------------" << endl;
         cout << left << setw(20) << "NET TOTAL:" << "RM " << *netTotal << endl;
+        outData << left << setw(20) << "NET TOTAL:" << "RM " << *netTotal << endl;
         cout << "==========================================" << endl;
+        outData << "==========================================" << endl;
         cout << "        Thank You Come Again!             " << endl;
-        //write to file
-        outReceipt << "------------------------------------------" << endl;
-        outReceipt << left << setw(20) << "GROSS TOTAL:" << "RM " << *grossTotal << endl;
-        outReceipt << left << setw(20) << "DISCOUNT:" << "-RM " << *discountAmount << endl;
-        outReceipt << "------------------------------------------" << endl;
-        outReceipt << left << setw(20) << "NET TOTAL:" << "RM " << *netTotal << endl;
-        outReceipt << "==========================================" << endl;
-        outReceipt << "        Thank You Come Again!             " << endl;
+        outData << "        Thank You Come Again!             " << endl;
+        cout << "==========================================" << endl;
+        outData << "==========================================" << endl;
 
-        outReceipt.close();
-        cout << "\n>> Receipt saved to 'Receipt.txt'" << endl;
+        outData.close();
     } 
     else {
-        cout << ">> Cart is empty. Transaction cancelled.\n";
+        cout << ">> Cart is empty. Transaction cancelled." << endl;
     }
 
     //free the memory
@@ -401,7 +372,7 @@ void processSale(Item inv[], int size, double monthlyS[][TOTAL])
 }
 
 // Function to write report
-void generateReports(double monthlyS[][TOTAL]) 
+void generateReports(double monthlyS[][2]) 
 {
     string monthName;//to store month name
     cout << "\n=============================================" << endl;
@@ -409,34 +380,33 @@ void generateReports(double monthlyS[][TOTAL])
     cout << "=============================================" << endl;
     cout << "Enter Month Name (Exp: January): ";
     cin >> monthName;
-    //create file name and report title
-    string fileName = "Monthly_Report_" + monthName + ".txt";
-    string reportTitle = "PERFORMANCE REPORT: " + monthName;
+
+    string reportTitle = "PERFORMANCE REPORT: " + monthName;//report title
     //open file output
-    ofstream out;
-    out.open(fileName);
+    ofstream outdata;
+    outdata.open("Monthly Report.txt");
     //declare variables for calculations
     double totalSales = 0;
     double totalWeight = 0;
     double maxSale = 0; 
-    double minSale = 999999.0;//bacause we want to compare for lowest number
+    double minSale = monthlyS[0][0];//bacause we want to compare for lowest number
     int countActiveDays = 0;// to count days with sales
     int bestDay = 0, worstDay = 0;
     //show output
     cout << "\n--- " << reportTitle << " ---" << endl;
-    out << "--- " << reportTitle << " ---" << endl;
+    outdata << "--- " << reportTitle << " ---" << endl;
     cout << left << setw(10) << "Day" << setw(15) << "Sales(RM)" << setw(15) << "Weight(KG)" << endl;
-    out << left << setw(10) << "Day" << setw(15) << "Sales(RM)" << setw(15) << "Weight(KG)" << endl;
+    outdata << left << setw(10) << "Day" << setw(15) << "Sales(RM)" << setw(15) << "Weight(KG)" << endl;
     cout << "----------------------------------------" << endl;
-    out << "----------------------------------------" << endl;
+    outdata << "----------------------------------------" << endl;
     //to check each day sales
-    for (int i = 0; i < DAYS_IN_MONTH; i++) 
+    for (int i = 0; i < 31; i++) 
     {
         // Only process days that had sales > 0
         if (monthlyS[i][0] > 0) 
         {
             cout << "Day " << left << setw(6) << (i + 1) << "RM " << setw(12) << monthlyS[i][0] << setw(10) << monthlyS[i][1] << endl;
-            out << "Day " << left << setw(6) << (i + 1) << "RM " << setw(12) << monthlyS[i][0] << setw(10) << monthlyS[i][1] << endl;
+            outdata << "Day " << left << setw(6) << (i + 1) << "RM " << setw(12) << monthlyS[i][0] << setw(10) << monthlyS[i][1] << endl;
             //find total
             totalSales += monthlyS[i][0];
             totalWeight += monthlyS[i][1];
@@ -458,30 +428,27 @@ void generateReports(double monthlyS[][TOTAL])
     if (countActiveDays > 0) {
         averageSales = totalSales / countActiveDays;
     } else {
-        minSale = 0;//assign min sale to 0 if no sales
+        minSale = 0;
     }
     //output totals
     cout << "----------------------------------------" << endl;
-    out << "----------------------------------------" << endl;
-    //screen
+    outdata << "----------------------------------------" << endl;
     cout << "TOTAL SALES      : RM " << fixed << setprecision(2) << totalSales << endl;
+    outdata << "TOTAL SALES      : RM " << fixed << setprecision(2) << totalSales << endl;
     cout << "TOTAL WEIGHT     : " << totalWeight << " KG" << endl;
+    outdata << "TOTAL WEIGHT     : " << totalWeight << " KG" << endl;
     cout << "AVERAGE SALES    : RM " << averageSales << " (per active day)" << endl;
+    outdata << "AVERAGE SALES    : RM " << averageSales << " (per active day)" << endl;
     cout << "HIGHEST SALE     : RM " << maxSale << " (Day " << bestDay << ")" << endl;
+    outdata << "HIGHEST SALE     : RM " << maxSale << " (Day " << bestDay << ")" << endl;
     cout << "LOWEST SALE      : RM " << minSale << " (Day " << worstDay << ")" << endl;
-    //file
-    out << "TOTAL SALES      : RM " << fixed << setprecision(2) << totalSales << endl;
-    out << "TOTAL WEIGHT     : " << totalWeight << " KG" << endl;
-    out << "AVERAGE SALES    : RM " << averageSales << " (per active day)" << endl;
-    out << "HIGHEST SALE     : RM " << maxSale << " (Day " << bestDay << ")" << endl;
-    out << "LOWEST SALE      : RM " << minSale << " (Day " << worstDay << ")" << endl;
+    outdata << "LOWEST SALE      : RM " << minSale << " (Day " << worstDay << ")" << endl;
 
-    out.close();
-    cout << "\n>> Report generated successfully: " << fileName << endl;
+    outdata.close();
 }
 
 //Function to edit fruit details
-void editFruit(Item inv[], int size) 
+void editFruit(Item inv[], int fCount) 
 {
     string name;
     cout << "\n===================================" << endl;
@@ -491,16 +458,17 @@ void editFruit(Item inv[], int size)
     getline(cin, name);
 
     //search
-    int index = -1;//give index value -1 if not found
-    for (int i = 0; i < size; i++) {
+    int index = 0;
+    bool check = false;
+    for (int i = 0; i < fCount; i++) {
         if (inv[i].name == name) 
             index = i;
+            check = true;
     }
-    if (index == -1) 
-        cout << ">> Error: Fruit not found in inventory.\n";
-    else
-    {
-        //show current details so user knows what they are editing
+    if (check == false) 
+        cout << ">>Fruit not found in inventory." << endl;
+    else {
+        //menu to edit
         cout << "\n--- Current Details for " << inv[index].name << " ---" << endl;
         cout << "1. Price  : RM " << inv[index].price << endl;
         cout << "2. Weight : " << inv[index].weight << " KG" << endl;
@@ -508,38 +476,39 @@ void editFruit(Item inv[], int size)
         cout << "4. Cancel Edit" << endl;
 
         int editChoice;
-        cout << "\nSelect field to edit (1-4): ";
+        cout << "\nSelect menu to edit (1-4): ";
         cin >> editChoice;
         cin.ignore();
 
         if (editChoice == 1) {
             cout << "Enter New Price: ";
             cin >> inv[index].price;
-            cout << ">> Price updated successfully.\n";
+            cout << ">> Price updated successfully." << endl;
         } else if (editChoice == 2) {
             cout << "Enter New Weight: ";
             cin >> inv[index].weight;
-            cout << ">> Weight updated successfully.\n";
+            cout << ">> Weight updated successfully." << endl;
         } else if (editChoice == 3) {
             cout << "Enter New Type (Local/Imported): ";
             getline(cin, inv[index].type);
-            cout << ">> Type updated successfully.\n";
+            cout << ">> Type updated successfully." << endl;
         } else if (editChoice == 4) {
-            cout << ">> Edit Cancelled.\n";
+            cout << ">> Edit Cancelled." << endl;
             return;
         } else {
-            cout << ">> Invalid choice.\n";
+            cout << ">> Invalid choice." << endl;
             return;
         }
-        //save the file
-        ofstream outdata("Inventory.txt");
-        for (int i = 0; i < size; i++) {
+        //write to file
+        ofstream outdata;
+        outdata.open("Inventory.txt");
+        for (int i = 0; i < fCount; i++) {
             outdata << inv[i].name << ";" ;
             outdata << fixed << setprecision(2) << inv[i].price << ";";
             outdata << inv[i].weight << ";"; 
             outdata << inv[i].type << ";";
         }
         outdata.close(); 
-        cout << ">> File updated.\n";
+        cout << ">> File updated." << endl;
     }
 }
