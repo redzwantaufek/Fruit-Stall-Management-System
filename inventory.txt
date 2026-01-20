@@ -1,4 +1,4 @@
-Green Apple;0.50;49.00;Imported
+Green Apple;1.00;49.00;Imported
 Honey Mango;0.00;18.00;Local
 Musang King Durian;5.00;3.50;Local
 Black Grapes;8.50;16.20;Imported
