@@ -9,6 +9,9 @@ Korean Strawberry;5.00;38.00;Imported
 MD2 Pineapple;0.00;30.00;Local
 Red DragonFruit;0.50;20.50;Local
 Golden Kiwi;2.00;8.50;Imported
-Yellow Lemon;0.50;15.20;Imported
-Kampung Guava;4.00;15.00;Imported
+Yellow Lemon;0.50;13.20;Imported
+Kampung Guava;4.00;5.00;Imported
 Fragrant Pear;0.80;45.00;Imported
+Red Apple;5.00;30.00;Imported
+;0.00;0.00;
+;0.00;0.00;
