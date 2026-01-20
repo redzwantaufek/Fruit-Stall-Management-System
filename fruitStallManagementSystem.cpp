@@ -51,7 +51,7 @@ int main()
     //main menu
     do {
         cout << "\n============================================="<<endl;
-        cout << "Welcome to the Fruit Stall Management System!" << endl;
+        cout << "Welcome to the Fruit Stall Management System" << endl;
         cout << "=============================================" << endl;
         cout << "1. View Inventory" << endl;
         cout << "2. Add New Fruit" << endl;
