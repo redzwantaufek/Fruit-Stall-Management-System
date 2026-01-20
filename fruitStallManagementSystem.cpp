@@ -93,7 +93,7 @@ int main()
             cout << "Exit System" << endl;
         }
         else//invalid input
-            cout << "Invalid input. Please enter number between 1-7.!!!!!"<<endl;
+            cout << "Invalid input. Please enter number between 1-7.!!!"<<endl;
             
     } while (choice != 7);
 
@@ -106,8 +106,7 @@ void getData(Item inv[], int &fCount, ifstream &indata)
 
         fCount = 0; //to make size 0 everytime function is called
         // read file
-        while (!indata.eof()) { //read name first, kalau takde nama break the loop, kalau buat eof ada blank space
-            getline(indata, inv[fCount].name, ';');
+        while (getline(indata, inv[fCount].name, ';')) { //read name first, kalau takde nama break the loop, kalau buat eof ada blank space
             indata >> inv[fCount].price; 
             indata.ignore();
             indata >> inv[fCount].weight; 
@@ -151,7 +150,7 @@ void addFruit(Item inv[], int &fCount)
         fCount++;
     }
     else {
-        cout << "Inventory Full (Limit 100)!" << endl;
+        cout << "Inventory Full (Limit 100)!!!" << endl;
     }
 }
 
@@ -189,7 +188,7 @@ void deleteFruit(Item inv[], int &fCount)
             cout << ">> Deletion Cancelled." << endl;
         }
     } else {
-        cout << "Fruit Not found." << endl; 
+        cout << "Fruit Not found!!!" << endl; 
     }
 }
 
@@ -222,7 +221,7 @@ void processSale(Item inv[], int fCount, double monthlyS[][2])
     *netTotal = 0.0;
 
     cout << "\n==========================================" << endl;
-    cout << "      Checkout System       " << endl;
+    cout << "             Checkout System              " << endl;
     cout << "==========================================" << endl;
 
     //step 1 add item
@@ -270,7 +269,7 @@ void processSale(Item inv[], int fCount, double monthlyS[][2])
 
         } 
         else {
-            cout << ">> Error: Item not found." << endl; 
+            cout << ">>Item not found!!!" << endl; 
         }
 
         cout << "Add another item? (Y/N): ";
@@ -386,8 +385,8 @@ void generateReports(double monthlyS[][2])
     int countActiveDays = 0;// to count days with sales
     int bestDay = 0, worstDay = 0;
     //show output
-    cout << "\n--- " << reportTitle << " ---" << endl;
-    outdata << "--- " << reportTitle << " ---" << endl;
+    cout << "\n----- " << reportTitle << " -----" << endl;
+    outdata << "----- " << reportTitle << " -----" << endl;
     cout << left << setw(10) << "Day" << setw(15) << "Sales(RM)" << setw(15) << "Weight(KG)" << endl;
     outdata << left << setw(10) << "Day" << setw(15) << "Sales(RM)" << setw(15) << "Weight(KG)" << endl;
     cout << "----------------------------------------" << endl;
@@ -398,8 +397,8 @@ void generateReports(double monthlyS[][2])
         // Only process days that had sales > 0
         if (monthlyS[i][0] > 0) 
         {
-            cout << "Day " << left << setw(6) << (i + 1) << "RM " << setw(12) << monthlyS[i][0] << setw(10) << monthlyS[i][1] << endl;
-            outdata << "Day " << left << setw(6) << (i + 1) << "RM " << setw(12) << monthlyS[i][0] << setw(10) << monthlyS[i][1] << endl;
+            cout << "Day " << left << setw(6) << (i + 1) << "RM " << fixed << setprecision(2) << setw(12) << monthlyS[i][0] << setw(10) << monthlyS[i][1] << endl;
+            outdata << "Day " << left << setw(6) << (i + 1) << "RM " << fixed << setprecision(2) << setw(12) << monthlyS[i][0] << setw(10) << monthlyS[i][1] << endl;
             //find total
             totalSales += monthlyS[i][0];
             totalWeight += monthlyS[i][1];
