@@ -4,7 +4,7 @@ CSC404 M3CS2302A
 Members:
 1. Muhammad Redzwan Bin Md Taufek (2025152219)
 2. Muhammad Naufal bin Abdul Rahim (2025147243)
-3. Muhammad Izzat Azamuddin bin Azman ()
+3. Muhammad Izzat Azamuddin bin Azman (2025127367)
 */
 #include <iostream>
 #include <fstream>
@@ -48,7 +48,7 @@ void editFruit(Item [], int);
 
 int main()
 {
-    Item inventory[MAX_FRUITS];// declare struct array, with max 500 fruits array
+    Item inventory[MAX_FRUITS];// declare struct array, with max 100 fruits array
     double monthlySales[DAYS_IN_MONTH][TOTAL] = {0};//declare 2D array to store monthly sales
     int fruitCount = 0;//to store number of fruits
     int choice;// to store user choice
@@ -67,8 +67,8 @@ int main()
         cout << "2. Add New Fruit" << endl;
         cout << "3. Delete Fruit" << endl;
         cout << "4. Edit Fruit Details" << endl;
-        cout << "5. Point of Sale System (POS System)" << endl;
-        cout << "6. Management Reports" << endl;
+        cout << "5. Check Out System" << endl;
+        cout << "6. Report" << endl;
         cout << "7. Exit" << endl;
         cout << "Enter Menu (1-7): ";
         cin >> choice;
@@ -77,31 +77,30 @@ int main()
         if (choice == 1)//display inventory
             displayInventory(inventory, fruitCount);
         else if (choice == 2){ //add new fruit
-            addFruit(inventory, fruitCount);//call add fruit function
-            saveData(inventory, fruitCount);//auto save after adding fruit
-            cout << ">> Auto-Save: File updated successfully.\n";
+            addFruit(inventory, fruitCount);
+            cout << ">>File updated successfully.\n";
         }
         else if (choice == 3)//delete fruit
         {
-            deleteFruit(inventory, fruitCount);//call delete fruit function
-            saveData(inventory, fruitCount);//auto save after deleting fruit
+            deleteFruit(inventory, fruitCount);
+            saveData(inventory, fruitCount);
         }
         else if (choice == 4)//edit fruit details
         {
             editFruit(inventory, fruitCount);
         }
-        else if (choice == 5)//point of sale system
+        else if (choice == 5)//check out system
             processSale(inventory, fruitCount, monthlySales);
-        else if (choice == 6)//generate reports
+        else if (choice == 6)//generate report
             generateReports(monthlySales);
         
         else if (choice == 7) //exit program
         {
             saveData(inventory, fruitCount); 
-            cout << "System Exiting... Data Saved.\n"; 
+            cout << "Exit System\n"; 
         }
         else//invalid input
-            cout << "Invalid input. Please enter number between 1-9.!!!!!"<<endl;
+            cout << "Invalid input. Please enter number between 1-7.!!!!!"<<endl;
             
     } while (choice != 7);
 
@@ -115,14 +114,11 @@ void getData(Item inv[], int &size, ifstream &indata)
         size = 0; //to make size 0 everytime function is called
         
         // read file
-        while (getline(indata, inv[size].name, ';')) {
-            //to read price from file
+        while (getline(indata, inv[size].name, ';')) { //read name first, kalau takde nama break the loop, kalau buat eof ada blank space
             indata >> inv[size].price; 
             indata.ignore();
-            //to read weight from file
             indata >> inv[size].weight; 
             indata.ignore();
-            // to read type from file
             getline(indata, inv[size].type);
             
             size++;
@@ -132,7 +128,8 @@ void getData(Item inv[], int &size, ifstream &indata)
 //function to save data to file
 void saveData(Item inv[], int size)
 {
-    ofstream outdata("Inventory.txt");//outpu file stream 
+    ofstream outdata;
+    outdata.open("Inventory.txt");
     for (int i = 0; i < size; i++) {
         //write data to file with ; delimiter
         outdata << inv[i].name << ";" ;
