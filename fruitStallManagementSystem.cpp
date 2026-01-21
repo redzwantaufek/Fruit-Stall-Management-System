@@ -74,12 +74,10 @@ int main()
         else if (choice == 3) {//delete fruit
             deleteFruit(inventory, fruitCount);
             saveData(inventory, fruitCount);
-            cout << ">>File updated successfully." << endl;
         }
         else if (choice == 4) { //edit fruit details
             editFruit(inventory, fruitCount);
             saveData(inventory, fruitCount);
-            cout << ">>File updated successfully." << endl;
         }
         else if (choice == 5) { //check out system
             processSale(inventory, fruitCount, monthlySales);
@@ -115,9 +113,7 @@ void getData(Item inv[], int &fCount, ifstream &indata)
             
             fCount++;
         }
-}
-
-//function to save data to file
+}//function to save data to file
 void saveData(Item inv[], int fCount)
 {
     ofstream outdata;
@@ -137,7 +133,9 @@ void addFruit(Item inv[], int &fCount)
     //check if inventory full
     if (fCount < 100)
     {
-        cout << "\n---------- ADD NEW FRUIT ----------" << endl;
+        cout << "\n==========================================" << endl;
+        cout << "             ADD NEW FRUIT             " << endl;
+        cout << "==========================================" << endl;
         cout << "Name (Exp: Green Apple): "; 
         getline(cin, inv[fCount].name);
         cout << "Price per KG: "; 
@@ -159,7 +157,9 @@ void addFruit(Item inv[], int &fCount)
 void deleteFruit(Item inv[], int &fCount) 
 {
     string name;
-    cout << "\n------------- DELETE FRUIT -------------" << endl;
+    cout << "\n==========================================" << endl;
+    cout << "             DELETE FRUIT              " << endl;
+    cout << "==========================================" << endl;
     cout << "Enter Fruit Name: "; 
     getline(cin, name);
 
@@ -460,9 +460,11 @@ void editFruit(Item inv[], int fCount)
     int index = 0;
     bool check = false;
     for (int i = 0; i < fCount; i++) {
-        if (inv[i].name == name) 
+        if (inv[i].name == name)
+        {
             index = i;
             check = true;
+        }
     }
     if (check == true){
         //menu to edit

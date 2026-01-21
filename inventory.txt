@@ -1,15 +1,16 @@
 Green Apple;1.00;49.00;Imported
-Honey Mango;0.00;18.00;Local
+Honey Mango;2.00;18.00;Local
 Musang King Durian;5.00;3.50;Local
-Black Grapes;8.50;16.20;Imported
+Black Grapes;8.50;11.20;Imported
 Navel Orange;0.80;60.50;Imported
 Red Flesh Papaya;0.50;15.00;Local
 Seedless Watermelon;0.50;25.50;Local
-Korean Strawberry;5.00;28.00;Imported
-MD2 Pineapple;0.00;30.00;Local
+Korean Strawberry;5.00;23.00;Imported
+MD2 Pineapple;4.00;30.00;Local
 Red DragonFruit;0.50;20.50;Local
 Golden Kiwi;2.00;8.50;Imported
-Yellow Lemon;0.50;13.20;Imported
+Yellow Lemon;0.50;8.20;Imported
 Kampung Guava;4.00;0.00;Imported
 Fragrant Pear;0.80;35.00;Imported
-Red Apple;5.00;19.00;Local
+Red Apple;5.00;90.00;Local
+Red Apple;4.00;30.00;Local

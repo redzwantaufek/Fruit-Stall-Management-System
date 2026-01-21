@@ -1,10 +1,11 @@
---- PERFORMANCE REPORT: February ---
+----- PERFORMANCE REPORT: January -----
 Day       Sales(RM)      Weight(KG)     
 ----------------------------------------
-Day 10    RM 5.00        1.00      
+Day 21    RM 73.62       20.00     
+Day 23    RM 42.50       5.00      
 ----------------------------------------
-TOTAL SALES      : RM 5.00
-TOTAL WEIGHT     : 1.00 KG
-AVERAGE SALES    : RM 5.00 (per active day)
-HIGHEST SALE     : RM 5.00 (Day 10)
-LOWEST SALE      : RM 5.00 (Day 10)
+TOTAL SALES      : RM 116.12
+TOTAL WEIGHT     : 25.00 KG
+AVERAGE SALES    : RM 58.06 (per active day)
+HIGHEST SALE     : RM 73.62 (Day 21)
+LOWEST SALE      : RM 42.50 (Day 23)
