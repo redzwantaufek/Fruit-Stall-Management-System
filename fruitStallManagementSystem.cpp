@@ -45,7 +45,7 @@ int main()
 
     //input file
     ifstream in;
-    in.open("Inventory.txt");
+    in.open("inventory.txt");
     //call funct get data
     getData(inventory, fruitCount, in);
     //main menu
@@ -113,11 +113,12 @@ void getData(Item inv[], int &fCount, ifstream &indata)
             
             fCount++;
         }
-}//function to save data to file
+}
+//function to save data to file
 void saveData(Item inv[], int fCount)
 {
     ofstream outdata;
-    outdata.open("Inventory.txt"); 
+    outdata.open("inventory.txt"); 
     for (int i = 0; i < fCount; i++) {
         outdata << inv[i].name << ";" ;
         outdata << fixed << setprecision(2) << inv[i].price << ";";
