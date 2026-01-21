@@ -12,5 +12,3 @@ Golden Kiwi;2.00;8.50;Imported
 Yellow Lemon;0.50;8.20;Imported
 Kampung Guava;4.00;0.00;Imported
 Fragrant Pear;0.80;35.00;Imported
-Red Apple;5.00;90.00;Local
-Red Apple;4.00;30.00;Local
