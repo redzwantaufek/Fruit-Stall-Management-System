@@ -156,8 +156,12 @@ void addFruit(Item inv[], int &fCount)
         cin >> inv[fCount].price;
         cout << "Weight (KG): "; 
         cin >> inv[fCount].weight;
-        cout << "Type (Local/Imported): "; 
-        cin >> inv[fCount].type; 
+        do{
+            if(inv[fCount].type != "Local" && inv[fCount].type != "Imported")
+                cout << "Invalid Type. Please enter 'Local' or 'Imported'." << endl;
+            cout << "Type (Local/Imported): ";
+            cin >> inv[fCount].type;
+        } while(inv[fCount].type != "Local" && inv[fCount].type != "Imported");
         cout << ">> Fruit Added!!!" << endl;
         fCount++;
     }
@@ -541,13 +545,11 @@ void splashScreen()
     cout << "\t  Loading System: ";
     char x = 219; // This is a solid block character code in Windows Console
     
-    for(int i = 0; i < 25; i++) {
+    for(int i = 0; i < 40; i++) {
         cout << x;      // Print the block
-        Sleep(100);      // Wait 100 milliseconds
+        Sleep(200);      //  200 milliseconds
     }
-    
-    Sleep(500); //pause for 0.2 seconds
-    
+    Sleep(500); //pause for 0.2 seconds  
     //clear screen after loading
     system("cls");
 }
