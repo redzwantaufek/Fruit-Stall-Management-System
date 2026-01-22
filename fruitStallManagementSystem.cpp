@@ -156,8 +156,12 @@ void addFruit(Item inv[], int &fCount)
         cin >> inv[fCount].price;
         cout << "Weight (KG): "; 
         cin >> inv[fCount].weight;
-        cout << "Type (Local/Imported): "; 
-        cin >> inv[fCount].type; 
+        do{
+            if(inv[fCount].type != "Local" && inv[fCount].type != "Imported")
+                cout << "Invalid Type. Please enter 'Local' or 'Imported'." << endl;
+            cout << "Type (Local/Imported): ";
+            cin >> inv[fCount].type;
+        } while(inv[fCount].type != "Local" && inv[fCount].type != "Imported");
         cout << ">> Fruit Added!!!" << endl;
         fCount++;
     }
