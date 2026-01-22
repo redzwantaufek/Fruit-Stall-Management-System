@@ -53,6 +53,7 @@ int main()
     //call funct get data
     getData(inventory, fruitCount, in);
     //main menu
+    
     do {
         cout << "\n============================================="<<endl;
         cout << "Welcome to the Fruit Stall Management System" << endl;
@@ -66,7 +67,15 @@ int main()
         cout << "7. Exit" << endl;
         cout << "Enter Menu (1-7): ";
         cin >> choice;
-        cin.ignore(); 
+        cin.ignore();
+
+        // Error handling for invalid input
+        if (cin.fail()) {
+            cin.clear();  //reset
+            cin.ignore(10000, '\n');//ignore input
+            cout << "Invalid input. Please enter a number between 1-7!!!" << endl;
+            continue;
+        }
   
         if (choice == 1)//display inventory
             displayInventory(inventory, fruitCount);
