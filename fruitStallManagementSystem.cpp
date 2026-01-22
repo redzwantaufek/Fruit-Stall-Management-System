@@ -539,14 +539,14 @@ void splashScreen()
 
     //loading bar
     cout << "\t  Loading System: ";
-    char x = 219; // This is a solid block character code in Windows Console
+    char x = 219;//solid block character
     
     for(int i = 0; i < 25; i++) {
-        cout << x;      // Print the block
-        Sleep(100);      // Wait 100 milliseconds
+        cout << x;//print the block
+        Sleep(100);//wait 100 milliseconds
     }
     
-    Sleep(500); //pause for 0.2 seconds
+    Sleep(500);//pause for 0.2 seconds
     
     //clear screen after loading
     system("cls");
