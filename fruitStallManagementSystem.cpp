@@ -9,6 +9,7 @@ Members:
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <windows.h>
 
 using namespace std;
 
@@ -35,7 +36,8 @@ void displayInventory(Item [], int);
 void processSale(Item [], int , double [][2]);
 void generateReports(double [][2]);
 void editFruit(Item [], int);
-
+void splashScreen();
+ 
 int main()
 {
     Item inventory[100];// declare struct array, with max 100 fruits array
@@ -43,6 +45,8 @@ int main()
     int fruitCount = 0;//to store number of fruits
     int choice;// to store user choice
 
+    //call the splash screen function
+    splashScreen();
     //input file
     ifstream in;
     in.open("inventory.txt");
@@ -503,4 +507,38 @@ void editFruit(Item inv[], int fCount)
     else {
         cout << ">>Fruit not found in inventory." << endl;
     }
+}
+
+//function for splash screen
+void splashScreen() 
+{
+    //clear screen
+    system("cls"); 
+
+    //Splash screen
+    cout << "\n\n\n";
+    cout << "\t\t  ===========================================" << endl;
+    cout << "\t\t    ____  ____   ___   _   _  ____   _____  " << endl;
+    cout << "\t\t   / ___||  _ \\ / _ \\ | | | ||  _ \\ |___  | " << endl;
+    cout << "\t\t  | |  _ | |_) | | | || | | || |_) |   / /  " << endl;
+    cout << "\t\t  | |_| ||  _ <| |_| || |_| ||  __/   / /   " << endl;
+    cout << "\t\t   \\____||_| \\_\\\\___/  \\___/ |_|     /_/    " << endl;
+    cout << "\t\t                                               " << endl;
+    cout << "\t\t         FRUIT STALL MANAGEMENT SYSTEM         " << endl;
+    cout << "\t\t  ===========================================" << endl;
+    cout << "\n\n";
+
+    //loading bar
+    cout << "\t  Loading System: ";
+    char x = 219; // This is a solid block character code in Windows Console
+    
+    for(int i = 0; i < 25; i++) {
+        cout << x;      // Print the block
+        Sleep(100);      // Wait 100 milliseconds
+    }
+    
+    Sleep(500); //pause for 0.2 seconds
+    
+    //clear screen after loading
+    system("cls");
 }
