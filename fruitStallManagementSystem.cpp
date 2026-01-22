@@ -20,7 +20,7 @@ struct Item {
     double weight; 
     string type;
 };
-struct Cart {
+struct Checkout {
     string name;
     double weight;
     double price;
@@ -224,7 +224,7 @@ void displayInventory(Item inv[], int fCount)
 // Function checkout system
 void processSale(Item inv[], int fCount, double monthlyS[][2]) 
 {
-    Cart cart[50]; // Array to hold up to 50 items
+    Checkout cart[50]; // Array to hold up to 50 items
     int cartCount = 0;// Number of items in cart
     char addMore = 'Y';//add ore items to cart or not
     char isMember;//member status
