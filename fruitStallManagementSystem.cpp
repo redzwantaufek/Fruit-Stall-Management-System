@@ -506,8 +506,12 @@ void editFruit(Item inv[], int fCount)
             cin >> inv[index].weight;
             cout << ">> Weight updated successfully." << endl;
         } else if (editChoice == 3) {
+            do{
+            if(inv[index].type != "Local" && inv[index].type != "Imported")
+                cout << "Invalid Type. Please enter 'Local' or 'Imported'." << endl;
             cout << "Enter New Type (Local/Imported): ";
-            getline(cin, inv[index].type);
+            cin >> inv[index].type;
+        } while(inv[index].type != "Local" && inv[index].type != "Imported");
             cout << ">> Type updated successfully." << endl;
         } else if (editChoice == 4) {
             cout << ">> Edit Cancelled." << endl;
