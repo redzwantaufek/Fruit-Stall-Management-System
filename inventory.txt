@@ -12,3 +12,5 @@ Golden Kiwi;2.00;8.50;Imported
 Yellow Lemon;0.50;8.20;Imported
 Kampung Guava;4.00;0.00;Imported
 Fragrant Pear;0.80;35.00;Imported
+Limau;2.00;1.00;skgksmg
+Red Apple;12.00;20.00;
